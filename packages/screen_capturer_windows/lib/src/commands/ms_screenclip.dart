@@ -100,11 +100,11 @@ class _MsScreenclip with SystemScreenCapturer {
       await Future.delayed(const Duration(milliseconds: 200));
     }
 
-    if (imagePath != null) {
+    /*if (imagePath != null) {
       await ScreenCapturerPlatform.instance.saveClipboardImageAsPngFile(
         imagePath: imagePath,
       );
-    }
+    }*/
   }
 }
 

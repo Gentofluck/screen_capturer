@@ -64,8 +64,9 @@ bool _isScreenClipping() {
 
   return false;
 }
-
 class _MsScreenclip with SystemScreenCapturer {
+  static const MethodChannel _channel = MethodChannel('dev.leanflutter.plugins/screen_capturer');
+
   @override
   Future<void> capture({
     required CaptureMode mode,
@@ -96,14 +97,13 @@ class _MsScreenclip with SystemScreenCapturer {
     );*/
     await Future.delayed(const Duration(seconds: 1));
 
-    while (_isScreenClipping()) {
-      await Future.delayed(const Duration(milliseconds: 200));
-    }
+      // Вызов нативного метода через MethodChannel
+      final result = await _channel.invokeMethod('captureScreen', args);
 
-    if (imagePath != null) {
-      await ScreenCapturerPlatform.instance.saveClipboardImageAsPngFile(
-        imagePath: imagePath,
-      );
+      // Обработка результата (если нужно)
+      print('Capture result: $result');
+    } on PlatformException catch (e) {
+      print("Failed to capture screen: '${e.message}'.");
     }
   }
 }

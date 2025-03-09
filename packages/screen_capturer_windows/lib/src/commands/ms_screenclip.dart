@@ -76,10 +76,12 @@ class _MsScreenclip with SystemScreenCapturer {
     
 
     print("erorr");
-    
+
     await ScreenCapturerPlatform.instance.captureScreen(
       imagePath: imagePath,
     );
+
+    print("check");
 
     /*
     String url = 'ms-screenclip://?';

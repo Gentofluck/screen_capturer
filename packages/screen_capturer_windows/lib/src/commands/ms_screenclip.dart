@@ -64,8 +64,9 @@ bool _isScreenClipping() {
 
   return false;
 }
-
 class _MsScreenclip with SystemScreenCapturer {
+  static const MethodChannel _channel = MethodChannel('dev.leanflutter.plugins/screen_capturer');
+
   @override
   Future<void> capture({
     required CaptureMode mode,
@@ -73,31 +74,22 @@ class _MsScreenclip with SystemScreenCapturer {
     bool copyToClipboard = true,
     bool silent = true,
   }) async {
-    String url = 'ms-screenclip://?';
-    if (mode == CaptureMode.screen) {
-      url += 'type=snapshot';
-    } else {
-      url += 'clippingMode=${_knownCaptureModeArgs[mode]}';
-    }
-    await Clipboard.setData(const ClipboardData(text: ''));
-    ShellExecute(
-      0,
-      'open'.toNativeUtf16(),
-      url.toNativeUtf16(),
-      nullptr,
-      nullptr,
-      SHOW_WINDOW_CMD.SW_SHOWNORMAL,
-    );
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      // Подготовка параметров для вызова нативного метода
+      final Map<String, dynamic> args = {
+        'mode': mode.toString(),
+        'imagePath': imagePath,
+        'copyToClipboard': copyToClipboard,
+        'silent': silent,
+      };
 
-    while (_isScreenClipping()) {
-      await Future.delayed(const Duration(milliseconds: 200));
-    }
+      // Вызов нативного метода через MethodChannel
+      final result = await _channel.invokeMethod('captureScreen', args);
 
-    if (imagePath != null) {
-      await ScreenCapturerPlatform.instance.saveClipboardImageAsPngFile(
-        imagePath: imagePath,
-      );
+      // Обработка результата (если нужно)
+      print('Capture result: $result');
+    } on PlatformException catch (e) {
+      print("Failed to capture screen: '${e.message}'.");
     }
   }
 }

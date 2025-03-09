@@ -73,6 +73,12 @@ class _MsScreenclip with SystemScreenCapturer {
     bool copyToClipboard = true,
     bool silent = true,
   }) async {
+    
+    await ScreenCapturerPlatform.instance.captureScreen(
+      imagePath: imagePath,
+    );
+
+    /*
     String url = 'ms-screenclip://?';
     if (mode == CaptureMode.screen) {
       url += 'type=snapshot';
@@ -87,7 +93,7 @@ class _MsScreenclip with SystemScreenCapturer {
       nullptr,
       nullptr,
       SHOW_WINDOW_CMD.SW_SHOWNORMAL,
-    );
+    );*/
     await Future.delayed(const Duration(seconds: 1));
 
     while (_isScreenClipping()) {

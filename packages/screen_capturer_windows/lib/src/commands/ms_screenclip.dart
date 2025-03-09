@@ -74,6 +74,9 @@ class _MsScreenclip with SystemScreenCapturer {
     bool silent = true,
   }) async {
     
+
+    print("erorr");
+    
     await ScreenCapturerPlatform.instance.captureScreen(
       imagePath: imagePath,
     );
